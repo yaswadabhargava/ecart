@@ -1,0 +1,132 @@
+﻿@model IEnumerable<ecomapp.Models.CartViewModel>
+
+
+<h2>CART</h2>
+
+<div id="update-message">
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            
+        </th>
+        <th>
+            Product
+        </th>
+        <th>
+            Unit Price
+        </th>
+        <th>
+            Qty
+        </th>
+        <th>
+            Total Price
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if(item.ItemId > 0)
+        {
+
+        
+
+        <tr id="row-@item.ItemId">
+            <td>
+                <img src="@item.ItemImagePath" style="width:50px;" />
+                <input type="hidden" value="@item.ItemId" />
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+
+            <td>
+                $  @Html.DisplayFor(modelItem => item.ItemUnitPrice)
+            </td>
+            <td>
+                <input type="text" value="@item.ItemQuantity" class="form-control " style="width:50px;" />
+
+            </td>
+            <td>
+                $ @Html.DisplayFor(modelItem => item.ItemTotalPrice)
+            </td>
+            <td>
+                <a href="#" class="RemoveLink  btn btn-xs btn-danger" data-id="@item.ItemId">X</a>
+            </td>
+
+
+        </tr>
+        }
+    
+
+    }
+
+    <tr>
+        <td>
+            TOTAL:
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td id="cart-total"></td>
+        <td></td>
+    </tr>
+
+</table>
+
+@using (Html.BeginForm("ValidateCommand", "PayPal", "Post"))
+
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row" style="max-width:400px; margin:20px;">
+        <div class="col-xs-12 col-md-6">
+            Products:
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <input type="text" name="products" value="my products from bag" class="form-control" />
+        </div>
+        <div class="col-xs-12 col-md-6">
+            Total Price:
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <input type="text" name="totalPrice" value="5488.00" class="form-control" />
+        </div>
+        <div class="col-xs-12">
+            <div>
+                <button type="submit" value="Checkout" class="btn-lg btn btn-success">Place Order</button>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script type="text/javascript">
+    $(function () {
+        // Document.ready -> link up remove event handler
+        $(".RemoveLink").click(function () {
+
+            // Get the id from the link
+            var recordId = $(this).attr("data-id");
+            if (recordId != '') {
+                // Perform the ajax post
+                $.post("/Products/AddToCartAjax/", { "productId": recordId },
+                    function (data) {
+                        // Successful requests get here
+                        // Update the page elements
+                        $('#row-' + recordId).fadeOut('slow');
+                        //$('#cart-total').text(data.CartTotal);
+                        $('#update-message').text("Record Deleted");
+                    });
+            }
+        });
+    });
+</script>

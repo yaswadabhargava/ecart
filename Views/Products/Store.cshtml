@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ecomapp.Models.Product>
+
+@{
+    ViewBag.Title = "Store";
+}
+
+<h2>Store</h2>
+
+<p>
+   
+</p>
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Category.CategoryName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductPrice)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            <br />
+            @item.ProductImagePath
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductPrice)
+        </td>
+        <td>
+            <img src="@item.ProductImagePath" class="thumbnail" />
+        </td>
+
+    </tr>
+}
+
+</table>*@
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        using (Html.BeginForm("AddToCart", "Products", "Post"))
+        {
+            @Html.AntiForgeryToken()
+
+    <div class="col-md-4">
+        <center>
+            Product Image:<img src="@item.ProductImagePath" class="thumbnail" /><br />
+            <input type="text" name="ProductId" value="@item.ProductId" hidden="hidden" />
+            @item.ProductName [@item.Category.CategoryName]
+            <br /><strong>$@item.ProductPrice</strong><br />
+            <button type="submit" value="add" class="btn-xs btn-success">
+                Add to Cart
+            </button><br /><br />
+        </center>
+    </div>
+        }
+    }
+</div>

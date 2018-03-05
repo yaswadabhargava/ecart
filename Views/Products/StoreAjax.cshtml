@@ -1,0 +1,91 @@
+﻿@model IEnumerable<ecomapp.Models.Product>
+
+@{
+    ViewBag.Title = "Store";
+}
+
+<h2>Store 2</h2>
+
+<p>
+
+</p>
+@*<table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Category.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                <br />
+                @item.ProductImagePath
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductPrice)
+            </td>
+            <td>
+                <img src="@item.ProductImagePath" class="thumbnail" />
+            </td>
+
+        </tr>
+    }
+
+    </table>*@
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+
+
+        <div class="col-md-4">
+            <center>
+                Product Image:<img src="@item.ProductImagePath" class="thumbnail" /><br />
+                <input type="text" name="ProductId" value="@item.ProductId" hidden="hidden" />
+                @item.ProductName [@item.Category.CategoryName]
+                <br /><strong>$@item.ProductPrice</strong><br />
+                <button type="button" data-id="@item.ProductId" value="add" class=" addtocartlink btn-xs btn-success">
+                    Add to Cart
+                </button><br /><br />
+            </center>
+        </div>
+    }
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script type="text/javascript">
+    $(function () {
+        // Document.ready -> link up remove event handler
+        $(".addtocartlink").click(function () {
+
+            // Get the id from the link
+            var recordId = $(this).attr("data-id");
+            if (recordId != '') {
+                // Perform the ajax post
+                $.post("/Products/AddToCartAjax/", { "productId": recordId },
+                    function (data) {
+                        // Successful requests get here
+                        // Update the page elements
+                       // $('#row-' + recordId).fadeOut('slow');
+                        //$('#cart-total').text(data.CartTotal);
+                        //$('#update-message').text("Record Deleted");
+                        alert("cart item added");
+                    });
+            }
+        });
+    });
+</script>
